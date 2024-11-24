@@ -4,6 +4,7 @@ from random import randrange
 import time
 from ui import *
 
+
 # load from prompt.txt
 with open("./config/prompt.txt", 'r') as file:
     content = file.read()
@@ -81,6 +82,8 @@ def Upscaler2X( ):
     print('Guardando imagen...')
     im=Image.open(result)  
     im.save('./result_upscale.png')
+    current_timestamp = time.time()
+    im.save( "./history/" + str(current_timestamp) + "_upscale.png")
 
 def Upscaler4X():
     client = Client("https://bookbot-image-upscaling-playground.hf.space/")
@@ -93,15 +96,17 @@ def Upscaler4X():
     print('Guardando imagen...')
     im=Image.open(result)  
     im.save('./result_upscale.png')
+    current_timestamp = time.time()
+    im.save( "./history/" + str(current_timestamp) + "_upscale.png")
 
 def upscaler_window():
     new_window = tk.Toplevel()
     new_window.title('IA Studio ::: Upscaler')
     new_window.iconbitmap("./assets/icon.ico")
-    new_window.geometry("1000x900+50+50")
+    new_window.geometry("950x768+50+50")
     new_window.configure(bg="black")
 
-    upscaleFrameCenter = tk.Frame(new_window, width=800, height=800, bg = "gray40")
+    upscaleFrameCenter = tk.Frame(new_window, width=768, height=768, bg = "gray40")
     upscaleFrameCenter.pack_propagate(False)
     upscaleFrameCenter.pack( side="left", fill='both', expand='true')
 
@@ -111,18 +116,19 @@ def upscaler_window():
     label.image = photo
     label.pack()
 
-    lblTexto = tk.Label(upscaleFrameCenter, text = "Destino: ./result_upscale.png", fg="white", bg = "gray40")
-    lblTexto.pack()
-    
-    upscaleFrameRight = tk.Frame(new_window, width=800, height=780, bg = "gray40")
+    upscaleFrameRight = tk.Frame(new_window, width=182, height=768, bg = "gray40", pady=20)
     upscaleFrameRight.pack_propagate(False)
     upscaleFrameRight.pack( side="left", fill='both', expand='true')
 
-    button2x = tk.Button(upscaleFrameRight, text="Upscale X2", fg="white", bg="gray20", command=Upscaler2X, font=("Arial", 14))
+    button2x = tk.Button(upscaleFrameRight, text="Upscale X2", fg="black", bg="aquamarine2", command=Upscaler2X, font=("Arial", 14), padx=10, pady=10)
     button2x.pack()
 
-    button4x = tk.Button(upscaleFrameRight, text="Upscale X4", fg="white", bg="gray20", command=Upscaler4X, font=("Arial", 14))
+    button4x = tk.Button(upscaleFrameRight, text="Upscale X4", fg="black", bg="aquamarine2", command=Upscaler4X, font=("Arial", 14),padx=10, pady=10)
     button4x.pack()
+
+    lblTexto = tk.Label(upscaleFrameRight, text = "Destino: ./result_upscale.png", fg="white", bg = "gray40")
+    lblTexto.pack()
+    
 
 iconUpscale = ImageTk.PhotoImage(file = "./assets/upscale_icon.png") 
 btnUpscaleMode = tk.Button(mainFrameLeft, image = iconUpscale, bd = 0, command=upscaler_window, height = 50, width = 50, bg="gray10", font=("Arial", 12))
@@ -132,14 +138,65 @@ ToolTip(btnUpscaleMode, msg="Upscaler")
 ################  INPAINT ################
 
 def Inpainting():
+    client = Client("multimodalart/flux-outpainting")
+    result = client.predict(
+            image=handle_file('./inpainting.png'),
+            mask=handle_file('./inpainting_mask.png'),
+            width=768,
+            height=768,
+            overlap_percentage=10,
+            num_inference_steps=8,
+            resize_option="Full",
+            custom_resize_percentage=50,
+            prompt_input="Black eyes",
+            alignment="Middle",
+            overlap_left=True,
+            overlap_right=True,
+            overlap_top=True,
+            overlap_bottom=True,
+            api_name="/inpaint_1"
+    )
+
+    print(result)
     return
 
 def inpainting_window():
     new_window = tk.Toplevel()
     new_window.title('IA Studio ::: Inpainting')
     new_window.iconbitmap("./assets/icon.ico")
-    new_window.geometry("1000x900+50+50")
+    new_window.geometry("1024x900+50+50")
     new_window.configure(bg="black")
+
+    inpaintingFrameCenter = tk.Frame(new_window, width=1024, height=600, bg="gray60")
+    inpaintingFrameCenter.pack( fill='both', expand='true')
+
+    pic = Image.open('./inpainting_mask.png')
+    pic = pic.resize((512, 512))
+    photo = ImageTk.PhotoImage(pic)
+    label = tk.Label(inpaintingFrameCenter, image=photo)
+    label.configure(image=photo)
+    label.image = photo
+    label.pack(side="left")
+
+    pic = Image.open('./inpainting.png')
+    pic = pic.resize((512, 512))
+    photo2 = ImageTk.PhotoImage(pic)
+    label2 = tk.Label(inpaintingFrameCenter, image=photo)
+    label2.configure(image=photo2)
+    label2.image = photo2
+    label2.pack(side="left")
+
+    lblPrompt= tk.Label(inpaintingFrameCenter, text="PROMPT", fg="white", bg="gray60", font=("Arial", 10, "bold"))
+    lblPrompt.pack(side="left")
+    
+    textPrompt = scrolledtext.ScrolledText(inpaintingFrameCenter, wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
+    textPrompt.pack(side="bottom")
+    textPrompt.insert(tk.END, "black eyes")
+
+    iconPaint = ImageTk.PhotoImage(file = "./assets/paint_icon.png") 
+    btnPaint = tk.Button(inpaintingFrameCenter, image = iconPaint, bd = 0, height = 50, width = 50, font=("Arial", 12))
+    btnPaint.pack(side="bottom")
+    ToolTip(btnPaint , msg="Pintar")
 
 icon3 = ImageTk.PhotoImage(file = "./assets/inpaint_icon.png") 
 btnGenerateMode3 = tk.Button(mainFrameLeft, image = icon3, bd = 0, command=inpainting_window,  height = 50, width = 50, bg="gray10", font=("Arial", 12))
@@ -162,6 +219,14 @@ icon4 = ImageTk.PhotoImage(file = "./assets/pose_icon.png")
 btnGenerateMode4 = tk.Button(mainFrameLeft, image = icon4, bd = 0, command=controlnet_window,  height = 50, width = 50, bg="gray10", font=("Arial", 12))
 btnGenerateMode4.pack(side = "top")
 ToolTip(btnGenerateMode4, msg="ControlNET")
+
+def cleanImage():  #AuraSR-v2
+    client = Client("gokaygokay/AuraSR-v2")
+    result = client.predict(
+            input_image=handle_file('https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png'),
+            api_name="/process_image"
+    )
+    print(result)
 
 # Execute tkinter
 tk.mainloop()

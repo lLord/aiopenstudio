@@ -4,6 +4,8 @@ from tkinter import scrolledtext
 from PIL import Image, ImageTk
 from tktooltip import ToolTip
 import webbrowser
+import os, platform, subprocess
+from pathlib import Path
 
 
 customtkinter.set_appearance_mode("System")
@@ -79,9 +81,15 @@ lblRightTime.pack()
 
 def openweb():
     webbrowser.open("https://prompthero.com/stable-diffusion-prompts",new=1)
+    
+def openhistory():
+    os.startfile(os.path.normpath('./history/'))
 
 btnPromptHero = tk.Button(mainFrameRight, text = "Prompt Help",command=openweb)
 btnPromptHero.pack()
+
+btnHistory = tk.Button(mainFrameRight, text = "History",command=openhistory)
+btnHistory .pack()
 
 lblPrompt= tk.Label(mainFrameRight, text="PROMPT", fg="white", bg="gray60", font=("Arial", 10, "bold"))
 lblPrompt.pack()
