@@ -3,8 +3,12 @@ import customtkinter
 from tkinter import scrolledtext
 from PIL import Image, ImageTk
 from tktooltip import ToolTip
+import webbrowser
+
+
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("green")
+
 
 ############# MAIN WINDOW ########################################################################################################
 
@@ -72,6 +76,13 @@ lblRightLoading.pack()
 lblRightTime= tk.Label(mainFrameRight, text="Time", fg="white", bg="gray60")
 lblRightTime.pack()
 
+
+def openweb():
+    webbrowser.open("https://prompthero.com/stable-diffusion-prompts",new=1)
+
+btnPromptHero = tk.Button(mainFrameRight, text = "Prompt Help",command=openweb)
+btnPromptHero.pack()
+
 lblPrompt= tk.Label(mainFrameRight, text="PROMPT", fg="white", bg="gray60", font=("Arial", 10, "bold"))
 lblPrompt.pack()
 
@@ -84,21 +95,6 @@ lblNegPrompt.pack()
 textNegPrompt = scrolledtext.ScrolledText(mainFrameRight, wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
 textNegPrompt.pack()
 
-############# POPUPS ########################################################################################################
-
-def inpainting_window():
-    new_window = tk.Toplevel()
-    new_window.title('IA Studio ::: Inpainting')
-    new_window.iconbitmap("./assets/icon.ico")
-    new_window.geometry("1000x900+50+50")
-    new_window.configure(bg="black")
-
-def controlnet_window():
-    new_window = tk.Toplevel()
-    new_window.title('IA Studio ::: ControlNet')
-    new_window.iconbitmap("./assets/icon.ico")
-    new_window.geometry("1000x900+50+50")
-    new_window.configure(bg="black")
 
 
 

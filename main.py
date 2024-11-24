@@ -63,7 +63,26 @@ def generate(texto_positivo, texto_negativo):
     print("%s" % (tiempo))
     return tiempo
 
-def Upscaler():
+button = tk.Button(mainFrameRight, text="Generar", fg="white", bg="gray20", command=promt_to_text, font=("Arial", 14))
+button.pack()
+root.bind("<Return>", promt_to_text)
+
+
+################  UPSCALE ################
+
+def Upscaler2X( ):
+    client = Client("https://bookbot-image-upscaling-playground.hf.space/")
+    result = client.predict(
+                    "./result.png",	# str (filepath or URL to image)
+                    "modelx5",	# str in 'Choose Upscaler' Radio component
+                    api_name="/predict"
+    )
+    print(result)
+    print('Guardando imagen...')
+    im=Image.open(result)  
+    im.save('./result_upscale.png')
+
+def Upscaler4X():
     client = Client("https://bookbot-image-upscaling-playground.hf.space/")
     result = client.predict(
                     "./result.png",	# str (filepath or URL to image)
@@ -74,12 +93,6 @@ def Upscaler():
     print('Guardando imagen...')
     im=Image.open(result)  
     im.save('./result_upscale.png')
-
-button = tk.Button(mainFrameRight, text="Generar", fg="white", bg="gray20", command=promt_to_text, font=("Arial", 14))
-button.pack()
-root.bind("<Return>", promt_to_text)
-
-################################
 
 def upscaler_window():
     new_window = tk.Toplevel()
@@ -98,37 +111,57 @@ def upscaler_window():
     label.image = photo
     label.pack()
 
-    upscaleFrameRight = tk.Frame(new_window, width=800, height=800, bg = "gray40")
+    lblTexto = tk.Label(upscaleFrameCenter, text = "Destino: ./result_upscale.png", fg="white", bg = "gray40")
+    lblTexto.pack()
+    
+    upscaleFrameRight = tk.Frame(new_window, width=800, height=780, bg = "gray40")
     upscaleFrameRight.pack_propagate(False)
     upscaleFrameRight.pack( side="left", fill='both', expand='true')
 
-    button = tk.Button(upscaleFrameRight, text="Upscale X4", fg="white", bg="gray20", command=Upscaler, font=("Arial", 14))
-    button.pack()
+    button2x = tk.Button(upscaleFrameRight, text="Upscale X2", fg="white", bg="gray20", command=Upscaler2X, font=("Arial", 14))
+    button2x.pack()
+
+    button4x = tk.Button(upscaleFrameRight, text="Upscale X4", fg="white", bg="gray20", command=Upscaler4X, font=("Arial", 14))
+    button4x.pack()
 
 iconUpscale = ImageTk.PhotoImage(file = "./assets/upscale_icon.png") 
 btnUpscaleMode = tk.Button(mainFrameLeft, image = iconUpscale, bd = 0, command=upscaler_window, height = 50, width = 50, bg="gray10", font=("Arial", 12))
 btnUpscaleMode.pack(side = "top")
 ToolTip(btnUpscaleMode, msg="Upscaler")
 
+################  INPAINT ################
+
+def Inpainting():
+    return
+
+def inpainting_window():
+    new_window = tk.Toplevel()
+    new_window.title('IA Studio ::: Inpainting')
+    new_window.iconbitmap("./assets/icon.ico")
+    new_window.geometry("1000x900+50+50")
+    new_window.configure(bg="black")
 
 icon3 = ImageTk.PhotoImage(file = "./assets/inpaint_icon.png") 
 btnGenerateMode3 = tk.Button(mainFrameLeft, image = icon3, bd = 0, command=inpainting_window,  height = 50, width = 50, bg="gray10", font=("Arial", 12))
 btnGenerateMode3.pack(side = "top")
 ToolTip(btnGenerateMode3, msg="Inpainting")
 
+################  CONTROLNET ################
+
+def controlNET():
+    return
+
+def controlnet_window():
+    new_window = tk.Toplevel()
+    new_window.title('IA Studio ::: ControlNet')
+    new_window.iconbitmap("./assets/icon.ico")
+    new_window.geometry("1000x900+50+50")
+    new_window.configure(bg="black")
+
 icon4 = ImageTk.PhotoImage(file = "./assets/pose_icon.png") 
 btnGenerateMode4 = tk.Button(mainFrameLeft, image = icon4, bd = 0, command=controlnet_window,  height = 50, width = 50, bg="gray10", font=("Arial", 12))
 btnGenerateMode4.pack(side = "top")
 ToolTip(btnGenerateMode4, msg="ControlNET")
 
-
-
-
-
-
-
 # Execute tkinter
 tk.mainloop()
-
-# Pyistaller make EXE
-# python -m PyInstaller --name AISTudio --windowed --collect-data gradio_client --add-data=./config:./config main.py
