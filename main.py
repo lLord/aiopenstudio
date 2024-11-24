@@ -64,8 +64,9 @@ def generate(texto_positivo, texto_negativo):
     print("%s" % (tiempo))
     return tiempo
 
-button = tk.Button(mainFrameRight, text="Generar", fg="white", bg="gray20", command=promt_to_text, font=("Arial", 14))
-button.pack()
+buttonGen = tk.Button(text="Generar", fg="black", bg="aquamarine2", command=promt_to_text, font=("Arial", 14))
+panelRight.add(buttonGen)
+buttonGen.configure(height=30)
 root.bind("<Return>", promt_to_text)
 
 

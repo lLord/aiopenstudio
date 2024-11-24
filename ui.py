@@ -24,7 +24,7 @@ root.configure(bg="black")
 
 mainFrameTop = tk.Frame(root, width=1600, height=50, bg = "black")
 mainFrameTop.pack_propagate(False)
-mainFrameTop .pack(fill='x')
+mainFrameTop .pack(fill='x', expand='false')
 
 logoTop = Image.open('./assets/logo.jpg')
 logo_Tk = ImageTk.PhotoImage(logoTop)
@@ -41,43 +41,41 @@ lblTopProjectName.pack(side="right")
 
 ############# MAIN FRAME LEFT ()
 
-mainFrameLeft = tk.Frame(root, width=50, height=800, bg = "gray10")
+mainFrameLeft = tk.Frame(root, width=60, height=800, bg = "gray10", pady=5, padx=5)
 mainFrameLeft.pack_propagate(False)
-mainFrameLeft.pack(side="left", fill='both', expand='true')
+mainFrameLeft.pack(side="left", fill='y', expand='false')
 
 iconGenerate = ImageTk.PhotoImage(file = "./assets/prompt_icon.png") 
 btnGenerateMode = tk.Button(mainFrameLeft, image = iconGenerate, bd = 0, height = 50, width = 50, bg="gray10", font=("Arial", 12))
 btnGenerateMode.pack(side = "top")
 ToolTip(btnGenerateMode, msg="Prompt to Image")
 
+mainFramebottom = tk.Frame(root, width=1600, height=30, bg = "gray60", pady=5, padx=5)
+mainFramebottom.pack_propagate(False)
+mainFramebottom.pack(side="bottom", fill='x', expand='false')
+
 ############# MAIN FRAME CENTER
 
-mainFrameCenter = tk.Frame(root, width=1200, height=800, bg = "gray40")
-mainFrameCenter.pack_propagate(False)
-mainFrameCenter.pack( side="left", fill='both', expand='true')
+mainPanel = tk.PanedWindow(root,  bg = "black", bd=3)
+mainPanel.pack(fill="both", expand="1")
+
+
+
+panelCenter = tk.PanedWindow(mainPanel, bg="black", orient ="vertical")
+panelCenter.configure(width=1000)
+
+panelRight = tk.PanedWindow(mainPanel, bg="gray60", orient ="vertical", bd=3, width=400)
+panelRight.configure(width=400)
+
+mainPanel.add(panelCenter)
+mainPanel.add(panelRight)
 
 photo = ImageTk.PhotoImage(Image.open('./result.png'))
-label = tk.Label(mainFrameCenter, image=photo)
-label.pack()
+label = tk.Label( image=photo)
+panelCenter.add(label)
 
-############# MAIN FRAME RIGHT
 
-mainFrameRight = tk.Frame(root, width=350, height=800, bg="gray60")
-mainFrameRight.pack_propagate(False)
-mainFrameRight.pack(side="right", fill='both', expand='true')
-
-lblRightWidth = tk.Label(mainFrameRight, text="Width", fg="white", bg="gray60")
-lblRightWidth.pack()
-
-lblRightHeight = tk.Label(mainFrameRight, text="Height", fg="white", bg="gray60")
-lblRightHeight.pack()
-
-lblRightLoading = tk.Label(mainFrameRight, text="Loading", fg="white", bg="gray60")
-lblRightLoading.pack()
-
-lblRightTime= tk.Label(mainFrameRight, text="Time", fg="white", bg="gray60")
-lblRightTime.pack()
-
+###PANEL RIGHT
 
 def openweb():
     webbrowser.open("https://prompthero.com/stable-diffusion-prompts",new=1)
@@ -85,26 +83,37 @@ def openweb():
 def openhistory():
     os.startfile(os.path.normpath('./history/'))
 
-btnPromptHero = tk.Button(mainFrameRight, text = "Prompt Help",command=openweb)
-btnPromptHero.pack()
+btnPromptHero = tk.Button(  text = "Prompt Help",command=openweb)
+panelRight.add(btnPromptHero)
 
-btnHistory = tk.Button(mainFrameRight, text = "History",command=openhistory)
-btnHistory .pack()
+btnHistory = tk.Button( text = "History",command=openhistory)
+panelRight.add(btnHistory)
 
-lblPrompt= tk.Label(mainFrameRight, text="PROMPT", fg="white", bg="gray60", font=("Arial", 10, "bold"))
-lblPrompt.pack()
+lblPrompt= tk.Label( text="PROMPT", fg="white", bg="gray60", font=("Arial", 10, "bold"))
+panelRight.add(lblPrompt)
 
-textPrompt = scrolledtext.ScrolledText(mainFrameRight, wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
-textPrompt.pack()
+textPrompt = scrolledtext.ScrolledText(wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
+panelRight.add(textPrompt)
 
-lblNegPrompt= tk.Label(mainFrameRight, text="PROMPT NEGATIVO", fg="white", bg="gray60", font=("Arial", 10, "bold"))
-lblNegPrompt.pack()
+lblNegPrompt= tk.Label( text="PROMPT NEGATIVO", fg="white", bg="gray60", font=("Arial", 10, "bold"))
+panelRight.add(lblNegPrompt)
 
-textNegPrompt = scrolledtext.ScrolledText(mainFrameRight, wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
-textNegPrompt.pack()
-
-
+textNegPrompt = scrolledtext.ScrolledText( wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
+panelRight.add(textNegPrompt)
 
 
+### bottom
+
+lblRightWidth = tk.Label( mainFramebottom,text="Width", fg="white", bg="gray60")
+lblRightWidth.pack(side="left")
+
+lblRightHeight = tk.Label( mainFramebottom,text="Height", fg="white", bg="gray60")
+lblRightHeight.pack(side="left")
+
+lblRightLoading = tk.Label( mainFramebottom,text="Loading", fg="white", bg="gray60")
+lblRightLoading.pack(side="left")
+
+lblRightTime= tk.Label( mainFramebottom,text="Time", fg="white", bg="gray60")
+lblRightTime.pack(side="left")
 
 
