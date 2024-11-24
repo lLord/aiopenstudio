@@ -27,14 +27,13 @@ def promt_to_text():
     fl = open("./config/negative_prompt.txt", "w")
     fl.write(texto_negativo)
     fl.close()
-
     print("Cargar")
     tiempo = generate(texto_positivo, texto_negativo)
-    lblRightTime.config(text="Generado en" + str(tiempo))
-
+    lblBottomTime.config(text="Generado en: " + str(round(tiempo,2)) +" segundos")
     print("Cargado")
 
 def generate(texto_positivo, texto_negativo):
+    lblBottomStatus.config(text="[GENERANDO] ")
     PROMPT= texto_positivo
     NEG_PROMPT= texto_negativo
     start_time = time.time()
@@ -64,7 +63,9 @@ def generate(texto_positivo, texto_negativo):
     print("%s" % (tiempo))
     return tiempo
 
-buttonGen = tk.Button(text="Generar", fg="black", bg="aquamarine2", command=promt_to_text, font=("Arial", 14))
+imgGen = tk.PhotoImage(file = "./assets/generate.png") 
+photoimage = imgGen.subsample(2, 2) 
+buttonGen = tk.Button(text="Generar imagen", image = photoimage, fg="black", bg="aquamarine2", command=promt_to_text, font=("Arial", 14),compound = "left")
 panelRight.add(buttonGen)
 buttonGen.configure(height=30)
 root.bind("<Return>", promt_to_text)

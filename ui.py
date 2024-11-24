@@ -59,8 +59,6 @@ mainFramebottom.pack(side="bottom", fill='x', expand='false')
 mainPanel = tk.PanedWindow(root,  bg = "black", bd=3)
 mainPanel.pack(fill="both", expand="1")
 
-
-
 panelCenter = tk.PanedWindow(mainPanel, bg="black", orient ="vertical")
 panelCenter.configure(width=1000)
 
@@ -89,31 +87,27 @@ panelRight.add(btnPromptHero)
 btnHistory = tk.Button( text = "History",command=openhistory)
 panelRight.add(btnHistory)
 
-lblPrompt= tk.Label( text="PROMPT", fg="white", bg="gray60", font=("Arial", 10, "bold"))
+lblPrompt= tk.Label( text="PROMPT", fg="black", bg="gray60", font=("Arial", 10, "bold"))
 panelRight.add(lblPrompt)
 
 textPrompt = scrolledtext.ScrolledText(wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
 panelRight.add(textPrompt)
 
-lblNegPrompt= tk.Label( text="PROMPT NEGATIVO", fg="white", bg="gray60", font=("Arial", 10, "bold"))
+lblNegPrompt= tk.Label( text="PROMPT NEGATIVO", fg="black", bg="gray60", font=("Arial", 10, "bold"))
 panelRight.add(lblNegPrompt)
 
 textNegPrompt = scrolledtext.ScrolledText( wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
 panelRight.add(textNegPrompt)
 
-
 ### bottom
 
-lblRightWidth = tk.Label( mainFramebottom,text="Width", fg="white", bg="gray60")
-lblRightWidth.pack(side="left")
+lblBottomStatus = tk.Label( mainFramebottom,text="[IDLE] ", fg="white", bg="gray60")
+lblBottomStatus.pack(side="left")
 
-lblRightHeight = tk.Label( mainFramebottom,text="Height", fg="white", bg="gray60")
-lblRightHeight.pack(side="left")
+lblBottomSize = tk.Label( mainFramebottom,text="768x768 píxeles", fg="white", bg="gray60")
+lblBottomSize .pack(side="left")
 
-lblRightLoading = tk.Label( mainFramebottom,text="Loading", fg="white", bg="gray60")
-lblRightLoading.pack(side="left")
-
-lblRightTime= tk.Label( mainFramebottom,text="Time", fg="white", bg="gray60")
-lblRightTime.pack(side="left")
+lblBottomTime= tk.Label( mainFramebottom,text="", fg="white", bg="gray60")
+lblBottomTime.pack(side="left")
 
 
