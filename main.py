@@ -46,7 +46,7 @@ def generate(texto_positivo, texto_negativo):
             randomize_seed=True,
             width=768,
             height=768,
-            guidance_scale=0,
+            guidance_scale=2,
             num_inference_steps=4,
             api_name="/infer"
     )
@@ -65,11 +65,15 @@ def generate(texto_positivo, texto_negativo):
 
 imgGen = tk.PhotoImage(file = "./assets/generate.png") 
 photoimage = imgGen.subsample(2, 2) 
-buttonGen = tk.Button(text="Generar imagen", image = photoimage, fg="black", bg="aquamarine2", command=promt_to_text, font=("Arial", 14),compound = "left")
-panelRight.add(buttonGen)
-buttonGen.configure(height=30)
+buttonGen = tk.Button(bottomFrame ,text="Generar imagen", image = photoimage, fg="black", bg="aquamarine2", command=promt_to_text, font=("Arial", 14),compound = "left", padx=5)
+buttonGen.pack(side="right")
+buttonGen.configure(height=32)
 root.bind("<Return>", promt_to_text)
 
+imgHero = tk.PhotoImage(file = "./assets/hero_icon.png") 
+btnPromptHero = tk.Button( bottomFrame, text = "Prompt Help",command=openweb, image = imgHero, bg="black", padx=5)
+btnPromptHero.pack(side="right")
+btnPromptHero.configure(height=32)
 
 ################  UPSCALE ################
 

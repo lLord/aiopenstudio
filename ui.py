@@ -56,24 +56,70 @@ mainFramebottom.pack(side="bottom", fill='x', expand='false')
 
 ############# MAIN FRAME CENTER
 
-mainPanel = tk.PanedWindow(root,  bg = "black", bd=3)
+mainPanel = tk.PanedWindow(root,  bg ="black", bd=3)
 mainPanel.pack(fill="both", expand="1")
 
-panelCenter = tk.PanedWindow(mainPanel, bg="black", orient ="vertical")
+panelCenter = tk.PanedWindow( bg="black", orient ="vertical")
 panelCenter.configure(width=1000)
 
-panelRight = tk.PanedWindow(mainPanel, bg="gray60", orient ="vertical", bd=3, width=400)
+panelRight = tk.PanedWindow( bg="gray10", orient ="vertical", bd=3, width=400)
 panelRight.configure(width=400)
 
 mainPanel.add(panelCenter)
 mainPanel.add(panelRight)
 
 photo = ImageTk.PhotoImage(Image.open('./result.png'))
-label = tk.Label( image=photo)
+label = tk.Label( image=photo, bg="black")
 panelCenter.add(label)
 
-
 ###PANEL RIGHT
+
+settingsFrame = tk.Frame(  height= 350, bg = "black", pady=5, padx=5)
+settingsFrame.pack_propagate(False)
+settingsFrame.pack(side="top", fill='x', expand='true')
+panelRight.add(settingsFrame)
+
+lblGuide= tk.Label( settingsFrame,text="MODEL:", fg="white", bg="gray40", font=("Arial", 10, "bold"))
+lblGuide.pack()
+
+options = [
+    "stable-diffusion-3.5-large-turbo",
+    "alimama-creative-FLUX.1-Turbo-Alpha",
+    "Flux-Midjourney-Mix-LoRA"
+]
+
+value_inside = tk.StringVar(root) 
+value_inside.set("Stable-Diffusion-3.5-large-turbo")
+dropModles = tk.OptionMenu(settingsFrame, value_inside, *options)
+dropModles.pack()
+
+lblGuide= tk.Label( settingsFrame,text="Width", fg="white", bg="gray40", font=("Arial", 10, "bold"))
+lblGuide.pack()
+
+lblGuide= tk.Label( settingsFrame,text="Height", fg="white", bg="gray40", font=("Arial", 10, "bold"))
+lblGuide.pack()
+
+lblGuide= tk.Label( settingsFrame,text="Guidance Scale", fg="white", bg="gray40", font=("Arial", 10, "bold"))
+lblGuide.pack()
+
+
+lblGuide= tk.Label( settingsFrame,text="Inference steps", fg="white", bg="gray40", font=("Arial", 10, "bold"))
+lblGuide.pack()
+
+
+lblGuide= tk.Label( settingsFrame,text="Seed", fg="black", bg="gray40", font=("Arial", 10, "bold"))
+lblGuide.pack()
+
+promptsFrame = tk.Frame(  height= 410, bg= "black", pady=5, padx=5)
+promptsFrame.pack_propagate(False)
+promptsFrame.pack(side="right", fill='x', expand='true')
+panelRight.add(promptsFrame)
+
+bottomFrame = tk.Frame(height=32, bg = "black", pady=5, padx=5)
+bottomFrame.pack_propagate(True)
+bottomFrame.pack(side="bottom", fill='x', expand='false')
+panelRight.add(bottomFrame)
+bottomFrame.configure(height=32)
 
 def openweb():
     webbrowser.open("https://prompthero.com/stable-diffusion-prompts",new=1)
@@ -81,23 +127,31 @@ def openweb():
 def openhistory():
     os.startfile(os.path.normpath('./history/'))
 
-btnPromptHero = tk.Button(  text = "Prompt Help",command=openweb)
-panelRight.add(btnPromptHero)
+imgUndo = tk.PhotoImage(file = "./assets/undo_icon.png") 
+btnUndo = tk.Button( bottomFrame, image = imgUndo, bg="black", borderwidth=0, padx=5)
+btnUndo.pack(side="left")
+btnUndo.configure(height=34)
 
-btnHistory = tk.Button( text = "History",command=openhistory)
-panelRight.add(btnHistory)
+imgHero = tk.PhotoImage(file = "./assets/redo_icon.png") 
+btnHistory = tk.Button( bottomFrame, image = imgHero, bg="black", borderwidth=0 , padx=5)
+btnHistory.pack(side="left")
+btnHistory.configure(height=34)
 
-lblPrompt= tk.Label( text="PROMPT", fg="black", bg="gray60", font=("Arial", 10, "bold"))
-panelRight.add(lblPrompt)
+btnHistory = tk.Button( bottomFrame, text = "History",command=openhistory, padx=5)
+btnHistory.pack(side="left")
+btnHistory.configure(height=34)
 
-textPrompt = scrolledtext.ScrolledText(wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
-panelRight.add(textPrompt)
+lblPrompt= tk.Label( promptsFrame, text="PROMPT", fg="white", bg="gray40", font=("Arial", 10, "bold"))
+lblPrompt.pack(fill='x', expand='false')
 
-lblNegPrompt= tk.Label( text="PROMPT NEGATIVO", fg="black", bg="gray60", font=("Arial", 10, "bold"))
-panelRight.add(lblNegPrompt)
+textPrompt = scrolledtext.ScrolledText(promptsFrame ,wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
+textPrompt.pack(fill='x', expand='false')
 
-textNegPrompt = scrolledtext.ScrolledText( wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
-panelRight.add(textNegPrompt)
+lblNegPrompt= tk.Label(promptsFrame , text="PROMPT NEGATIVO", fg="black", bg="gray60", font=("Arial", 10, "bold"))
+lblNegPrompt.pack(fill='x', expand='false')
+
+textNegPrompt = scrolledtext.ScrolledText(promptsFrame , wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
+textNegPrompt.pack(fill='x', expand='false')
 
 ### bottom
 
