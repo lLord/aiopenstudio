@@ -1,89 +1,8 @@
-import tkinter as tk
-from tkinter import scrolledtext
-from tktooltip import ToolTip
 from PIL import Image, ImageTk
 from gradio_client import Client, handle_file
 from random import randrange
 import time
-
-root = tk.Tk()
-root.title('IA Studio')
-root.iconbitmap("icon.ico")
-root.geometry("1600x900+0+0")
-root.configure(bg="black")
-
-
-
-############# MAIN FRAME TOP
-
-mainFrameTop = tk.Frame(root, width=1600, height=50, bg = "black")
-mainFrameTop.pack_propagate(False)
-mainFrameTop .pack(fill='x')
-
-logoTop = Image.open('logo.jpg')
-logo_Tk = ImageTk.PhotoImage(logoTop)
-labelLogo = tk.Label(mainFrameTop, text="", image = logo_Tk, bg = "black")
-labelLogo.pack(side="left")
-
-lblTopCategory = tk.Label(mainFrameTop, text="Computer Vision >", fg="PaleGreen3", bg="black", font=('Arial', 14))
-lblTopCategory.pack(side="left")
-lblTopTask = tk.Label(mainFrameTop, text="Image-to-Text", fg="white", bg="black", font=('Arial', 12))
-lblTopTask.pack(side="left")
-
-lblTopProjectName = tk.Label(mainFrameTop, text="project: My First IA Project ", fg="white", bg="black", font=('Arial', 12))
-lblTopProjectName.pack(side="right")
-
-############# MAIN FRAME LEFT
-
-mainFrameLeft = tk.Frame(root, width=50, height=800, bg = "gray10")
-mainFrameLeft.pack_propagate(False)
-mainFrameLeft.pack(side="left", fill='both', expand='true')
-
-btnGenerateMode = tk.Button(mainFrameLeft, text="Generar", fg="white", bg="gray10", font=("Arial", 12))
-btnGenerateMode.pack()
-ToolTip(btnGenerateMode, msg="Hover info")
-
-btnGenerateMode = tk.Button(mainFrameLeft, text="In-painting", fg="white", bg="gray10", font=("Arial", 12))
-btnGenerateMode.pack()
-ToolTip(btnGenerateMode, msg="In-painting")
-
-btnGenerateMode = tk.Button(mainFrameLeft, text="Upscaler", fg="white", bg="gray10", font=("Arial", 12))
-btnGenerateMode.pack()
-ToolTip(btnGenerateMode, msg="Upscaler")
-
-############# MAIN FRAME CENTER
-
-mainFrameCenter = tk.Frame(root, width=1200, height=800, bg = "gray40")
-mainFrameCenter.pack_propagate(False)
-mainFrameCenter.pack( side="left", fill='both', expand='true')
-
-photo = ImageTk.PhotoImage(Image.open('./result.png'))
-label = tk.Label(mainFrameCenter, image=photo)
-label.pack()
-
-############# MAIN FRAME RIGHT
-
-mainFrameRight = tk.Frame(root, width=350, height=800, bg="gray60")
-mainFrameRight.pack_propagate(False)
-mainFrameRight.pack(side="right", fill='both', expand='true')
-
-lblRightWidth = tk.Label(mainFrameRight, text="Width", fg="white", bg="gray60")
-lblRightWidth.pack()
-
-lblRightHeight = tk.Label(mainFrameRight, text="Height", fg="white", bg="gray60")
-lblRightHeight.pack()
-
-lblRightLoading = tk.Label(mainFrameRight, text="Loading", fg="white", bg="gray60")
-lblRightLoading.pack()
-
-lblRightTime= tk.Label(mainFrameRight, text="Time", fg="white", bg="gray60")
-lblRightTime.pack()
-
-lblPrompt= tk.Label(mainFrameRight, text="PROMPT", fg="white", bg="gray60", font=("Arial", 10, "bold"))
-lblPrompt.pack()
-
-textPrompt = scrolledtext.ScrolledText(mainFrameRight, wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
-textPrompt.pack()
+from ui import *
 
 # load from prompt.txt
 with open("./config/prompt.txt", 'r') as file:
@@ -91,19 +10,13 @@ with open("./config/prompt.txt", 'r') as file:
     textPrompt.delete(1.0, tk.END)  # Clear previous content
     textPrompt.insert(tk.END, content)
 
-lblNegPrompt= tk.Label(mainFrameRight, text="PROMPT NEGATIVO", fg="white", bg="gray60", font=("Arial", 10, "bold"))
-lblNegPrompt.pack()
-
-textNegPrompt = scrolledtext.ScrolledText(mainFrameRight, wrap=tk.WORD, width=40, height=8, font=("Arial", 12)) 
-textNegPrompt.pack()
-
 # load from prompt.txt
 with open("./config/negative_prompt.txt", 'r') as file:
     content = file.read()
     textNegPrompt.delete(1.0, tk.END)  # Clear previous content
     textNegPrompt.insert(tk.END, content)
 
-def cosas():
+def promt_to_text():
     #save prompts
     texto_positivo = textPrompt.get('1.0', tk.END)
     fl = open("./config/prompt.txt", "w")
@@ -150,9 +63,72 @@ def generate(texto_positivo, texto_negativo):
     print("%s" % (tiempo))
     return tiempo
 
-button = tk.Button(mainFrameRight, text="Generar", fg="white", bg="gray20", command=cosas, font=("Arial", 14))
+def Upscaler():
+    client = Client("https://bookbot-image-upscaling-playground.hf.space/")
+    result = client.predict(
+                    "./result.png",	# str (filepath or URL to image)
+                    "modelx4",	# str in 'Choose Upscaler' Radio component
+                    api_name="/predict"
+    )
+    print(result)
+    print('Guardando imagen...')
+    im=Image.open(result)  
+    im.save('./result_upscale.png')
+
+button = tk.Button(mainFrameRight, text="Generar", fg="white", bg="gray20", command=promt_to_text, font=("Arial", 14))
 button.pack()
-root.bind("<Return>", cosas)
+root.bind("<Return>", promt_to_text)
+
+################################
+
+def upscaler_window():
+    new_window = tk.Toplevel()
+    new_window.title('IA Studio ::: Upscaler')
+    new_window.iconbitmap("./assets/icon.ico")
+    new_window.geometry("1000x900+50+50")
+    new_window.configure(bg="black")
+
+    upscaleFrameCenter = tk.Frame(new_window, width=800, height=800, bg = "gray40")
+    upscaleFrameCenter.pack_propagate(False)
+    upscaleFrameCenter.pack( side="left", fill='both', expand='true')
+
+    photo = ImageTk.PhotoImage(Image.open('./result.png'))
+    label = tk.Label(upscaleFrameCenter, image=photo)
+    label.configure(image=photo)
+    label.image = photo
+    label.pack()
+
+    upscaleFrameRight = tk.Frame(new_window, width=800, height=800, bg = "gray40")
+    upscaleFrameRight.pack_propagate(False)
+    upscaleFrameRight.pack( side="left", fill='both', expand='true')
+
+    button = tk.Button(upscaleFrameRight, text="Upscale X4", fg="white", bg="gray20", command=Upscaler, font=("Arial", 14))
+    button.pack()
+
+iconUpscale = ImageTk.PhotoImage(file = "./assets/upscale_icon.png") 
+btnUpscaleMode = tk.Button(mainFrameLeft, image = iconUpscale, bd = 0, command=upscaler_window, height = 50, width = 50, bg="gray10", font=("Arial", 12))
+btnUpscaleMode.pack(side = "top")
+ToolTip(btnUpscaleMode, msg="Upscaler")
+
+
+icon3 = ImageTk.PhotoImage(file = "./assets/inpaint_icon.png") 
+btnGenerateMode3 = tk.Button(mainFrameLeft, image = icon3, bd = 0, command=inpainting_window,  height = 50, width = 50, bg="gray10", font=("Arial", 12))
+btnGenerateMode3.pack(side = "top")
+ToolTip(btnGenerateMode3, msg="Inpainting")
+
+icon4 = ImageTk.PhotoImage(file = "./assets/pose_icon.png") 
+btnGenerateMode4 = tk.Button(mainFrameLeft, image = icon4, bd = 0, command=controlnet_window,  height = 50, width = 50, bg="gray10", font=("Arial", 12))
+btnGenerateMode4.pack(side = "top")
+ToolTip(btnGenerateMode4, msg="ControlNET")
+
+
+
+
+
+
 
 # Execute tkinter
 tk.mainloop()
+
+# Pyistaller make EXE
+# python -m PyInstaller --name AISTudio --windowed --collect-data gradio_client --add-data=./config:./config main.py
