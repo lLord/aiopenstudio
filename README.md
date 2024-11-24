@@ -11,4 +11,4 @@ pip install -r requirements.txt
 
 pip install pyinstaller
 
-python -m PyInstaller --name AISTudio --windowed --collect-data gradio_client --add-data=./config:./config main.py
+python -m PyInstaller --name AiSTudio --windowed --collect-data gradio_client --add-data=./config:./config main.py
