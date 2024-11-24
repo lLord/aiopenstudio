@@ -1,5 +1,7 @@
 # E26 IA Studio
 
+![alt text]([http://url/to/img.png](https://i.imgur.com/QK4nurC.png))
+
 git clone https://github.com/lLord/iastudio.git
 
 cd iastudio
