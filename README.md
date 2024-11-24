@@ -1,4 +1,4 @@
-# iastudio
+# E26 IA Studio
 
 pip install -r requirements.txt
 
