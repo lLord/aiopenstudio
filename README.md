@@ -9,7 +9,7 @@ cd aiopenstudio
 pip install -r requirements.txt
 
 
-# To generate .exe
+# To generate a executable
 
 pip install pyinstaller
 
