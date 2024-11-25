@@ -1,4 +1,4 @@
-# E26 IA Studio
+# AI Open Studio
 
 ![IA Studio Interface](https://i.imgur.com/QK4nurC.png)
 
